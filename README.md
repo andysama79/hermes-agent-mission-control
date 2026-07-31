@@ -2,7 +2,7 @@
 
 Optional observability layer for multi-profile Hermes workflows.
 
-This repo starts the MVP desktop plugin architecture for a visual control plane that helps answer:
+Mission Control is a desktop-plugin-first visual control plane for questions like:
 
 - which profiles are active right now
 - what handoffs are happening
@@ -10,22 +10,41 @@ This repo starts the MVP desktop plugin architecture for a visual control plane 
 - where pipeline time is being spent
 - rough cost / throughput signals
 
-## MVP scope
+## Install
+
+### One-line install from GitHub
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/andysama79/hermes-agent-mission-control/main/install.sh | bash
+```
+
+This installs the plugin to:
+
+```text
+~/.hermes/desktop-plugins/agent-mission-control/plugin.js
+```
+
+If you want a different git ref, download and run the script with an argument:
+
+```bash
+curl -fsSL -o /tmp/mission-control-install.sh https://raw.githubusercontent.com/andysama79/hermes-agent-mission-control/main/install.sh
+bash /tmp/mission-control-install.sh main
+```
+
+After installation:
+- open Hermes Desktop
+- reload desktop plugins, or wait for hot reload
+- if needed, enable **Agent Mission Control** in **Settings → Plugins**
+
+## Current MVP scope
 
 The MVP focuses on a **desktop plugin pane** first:
 
 - live active profile indicator
 - event feed sourced from Hermes desktop `host.onEvent('*')`
-- pluggable telemetry adapters for delegation / cron / kanban / process events
+- heuristic handoff / activity visibility
 - normalized event schema
 - metrics pipeline ready for later cost + throughput rollups
-
-This repo intentionally keeps the first implementation thin:
-
-- no custom backend service yet
-- no database dependency yet
-- no dashboard page yet
-- no exact billing integration yet
 
 ## Current status
 
@@ -42,6 +61,7 @@ Included now:
 - recent handoff cards and pipeline hints
 - raw event inspector for debugging real Hermes envelope shapes
 - profile/type/status filters for investigating noisy sessions
+- GitHub-hosted install script
 
 Not included yet:
 
@@ -54,6 +74,7 @@ Not included yet:
 ```text
 .
 ├── README.md
+├── install.sh
 ├── .gitignore
 ├── docs/
 │   ├── ARCHITECTURE.md
@@ -66,23 +87,7 @@ Not included yet:
         └── plugin.js
 ```
 
-## Plugin installation target
-
-When ready to test in a real Hermes desktop environment, copy:
-
-```text
-desktop-plugins/agent-mission-control/plugin.js
-```
-
-into:
-
-```text
-$HERMES_HOME/desktop-plugins/agent-mission-control/plugin.js
-```
-
-Then open Hermes Desktop and run **Reload desktop plugins** if hot reload does not pick it up automatically.
-
-## Validation done in this scaffold
+## Validation
 
 - `node --check desktop-plugins/agent-mission-control/plugin.js`
 - JSON parse validation for `schemas/mission-control-event.schema.json`
@@ -109,14 +114,7 @@ The plugin currently:
 4. add per-profile lanes / timeline view
 5. add a dashboard/web history surface later
 
-## GitHub remote
+## GitHub
 
-Remote repo created:
-
-- https://github.com/andysama79/hermes-agent-mission-control
-
-Notes:
-
-- this environment still has no `gh` CLI configured
-- I was able to create the remote using the existing Git credential store
-- the local scaffold is linked to `origin`, but I have **not committed or pushed** the files yet
+- Repo: https://github.com/andysama79/hermes-agent-mission-control
+- Plugin source: `desktop-plugins/agent-mission-control/plugin.js`
