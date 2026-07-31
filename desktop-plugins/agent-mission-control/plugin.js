@@ -23,6 +23,10 @@ function maybeNumber(value) {
   return typeof value === 'number' && Number.isFinite(value) ? value : null
 }
 
+function getHostProfile(host, fallback = 'default') {
+  return safeString(host?.state?.profile?.get?.(), fallback)
+}
+
 function truncate(text, max = 140) {
   const value = typeof text === 'string' ? text : ''
   return value.length > max ? `${value.slice(0, max - 1)}…` : value
@@ -249,7 +253,7 @@ function createRuntime(ctx) {
   let profileInterval = null
   let sequence = 0
   let started = false
-  let lastObservedProfile = safeString(host.state.profile?.get?.(), 'default')
+  let lastObservedProfile = getHostProfile(host, 'default')
 
   function emit() {
     listeners.forEach(listener => listener({ ...snapshot }))
@@ -298,9 +302,9 @@ function createRuntime(ctx) {
   }
 
   function observeProfile(force = false) {
-    const profileName = safeString(host.state.profile?.get?.(), 'default')
+    const profileName = getHostProfile(host, 'default')
     snapshot.currentProfile = profileName
-    snapshot.adapters.profileStateAdapter = 'active'
+    snapshot.adapters.profileStateAdapter = host?.state?.profile ? 'active' : 'unavailable'
 
     if (force || profileName !== lastObservedProfile) {
       sequence += 1
@@ -342,16 +346,20 @@ function createRuntime(ctx) {
       observeProfile(true)
     }
 
-    try {
-      disposeHost = host.onEvent('*', rawEvent => {
-        sequence += 1
-        snapshot.captureState = 'listening'
-        snapshot.adapters.desktopEventAdapter = 'active'
-        const profileName = safeString(host.state.profile?.get?.(), snapshot.currentProfile || 'default')
-        pushEvent(normalizeEvent(rawEvent, profileName, sequence))
-      })
-    } catch (error) {
-      recordError(`host.onEvent subscription failed: ${String(error)}`)
+    if (host && typeof host.onEvent === 'function') {
+      try {
+        disposeHost = host.onEvent('*', rawEvent => {
+          sequence += 1
+          snapshot.captureState = 'listening'
+          snapshot.adapters.desktopEventAdapter = 'active'
+          const profileName = getHostProfile(host, snapshot.currentProfile || 'default')
+          pushEvent(normalizeEvent(rawEvent, profileName, sequence))
+        })
+      } catch (error) {
+        recordError(`host.onEvent subscription failed: ${String(error)}`)
+      }
+    } else {
+      recordError('host.onEvent is unavailable on this ctx; desktop event capture disabled')
     }
 
     profileInterval = setInterval(() => observeProfile(false), PROFILE_POLL_MS)
