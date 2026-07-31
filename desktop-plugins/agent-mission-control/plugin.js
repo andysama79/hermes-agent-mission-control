@@ -944,7 +944,6 @@ function MissionControlPane({ runtime }) {
               })
         })
       })),
-      }),
       showInspector
         ? section('Raw event inspector', jsx(ScrollArea, {
             style: { minHeight: '220px', maxHeight: '420px' },
