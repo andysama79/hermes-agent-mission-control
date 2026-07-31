@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/mission-control-event.schema.json",
+  "title": "MissionControlEvent",
+  "type": "object",
+  "required": [
+    "event_id",
+    "ts",
+    "event_type",
+    "status",
+    "metadata"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_profile": {
+      "type": ["string", "null"]
+    },
+    "target_profile": {
+      "type": ["string", "null"]
+    },
+    "session_id": {
+      "type": ["string", "null"]
+    },
+    "run_id": {
+      "type": ["string", "null"]
+    },
+    "task_id": {
+      "type": ["string", "null"]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "observed",
+        "queued",
+        "running",
+        "completed",
+        "failed",
+        "blocked",
+        "idle",
+        "active",
+        "unknown"
+      ]
+    },
+    "model": {
+      "type": ["string", "null"]
+    },
+    "provider": {
+      "type": ["string", "null"]
+    },
+    "tokens_in": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "tokens_out": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "estimated_cost_usd": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "duration_ms": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
