@@ -10,18 +10,18 @@ The goal is to give the user a visual surface for questions like:
 - where pipeline time may be getting lost
 - how a multi-agent workflow is behaving overall
 
-## Scope of this first branch
+## Scope of this branch
 
-This branch establishes the **foundation** of the project:
+This branch adds the **first working runtime**:
 
-- repository layout
-- event schema
-- architecture notes
-- MVP backlog
+- a Hermes Desktop plugin shell
+- wildcard event capture through `host.onEvent('*')`
+- heuristic event normalization
+- synthetic profile activity events
+- session-local persistence through `ctx.storage` when available
+- a recent-event feed and basic status chip
 
-It does **not** yet ship the runtime plugin implementation.
-
-## Planned repo layout
+## Repo layout
 
 ```text
 .
@@ -38,15 +38,21 @@ It does **not** yet ship the runtime plugin implementation.
         └── plugin.js
 ```
 
-## Design direction
+## Validation
 
-Mission Control should begin as an **optional Hermes Desktop pane** rather than a backend-heavy platform.
+- `node --check desktop-plugins/agent-mission-control/plugin.js`
+- JSON parse validation for `schemas/mission-control-event.schema.json`
 
-Why:
-- fastest path to usefulness
-- low friction for the user to check in occasionally
-- no extra deployment burden
-- natural place for live event feed, handoffs, and profile activity views
+## Current runtime behavior
+
+The plugin currently:
+
+- subscribes to `host.onEvent('*')`
+- emits synthetic `profile.activity` events when the active profile changes
+- keeps a rolling event buffer in memory
+- hydrates and persists that buffer through `ctx.storage` when supported
+- classifies many raw envelopes heuristically into normalized event types/statuses
+- surfaces a recent event feed plus persistence diagnostics
 
 ## GitHub remote
 
