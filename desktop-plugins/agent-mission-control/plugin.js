@@ -943,7 +943,9 @@ function MissionControlPane({ runtime }) {
                 children: 'No events match the current filters.'
               })
         })
-      }), showInspector
+      })),
+      }),
+      showInspector
         ? section('Raw event inspector', jsx(ScrollArea, {
             style: { minHeight: '220px', maxHeight: '420px' },
             children: jsx(RawInspector, { event: selectedEvent })
