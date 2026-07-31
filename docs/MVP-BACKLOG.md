@@ -1,24 +1,33 @@
 # MVP Backlog
 
-## Foundation
+## Immediate next tasks
 
-- [x] establish repo layout
-- [x] define normalized event schema
-- [x] outline plugin-first architecture
+1. Capture and catalog real `host.onEvent('*')` envelopes from Hermes desktop.
+2. Identify stable signals for:
+   - profile switches
+   - delegated child start/finish
+   - cron start/finish
+   - background process lifecycle
+3. Replace heuristic event classifiers with envelope-specific parsers where possible.
+4. Add a tiny reducer for:
+   - events per minute
+   - active profile dwell time
+   - recent handoff edges
+5. Promote the raw event inspector into a structured envelope-learning workflow.
+6. Add filters with saved presets for noisy multi-profile sessions.
+7. Add profile-lane and handoff-lane timeline views.
+8. Add confidence flags so the user can distinguish heuristic vs parser-backed classifications.
 
-## Next implementation steps
+## MVP stretch goals
 
-1. add the first desktop plugin shell
-2. subscribe to `host.onEvent('*')`
-3. normalize raw events into a shared event model
-4. show a recent event feed
-5. persist a small rolling buffer locally
-6. add handoff and profile summaries
-7. add debugging tools for raw event envelopes
+- bottom-pane timeline tab
+- recent handoff cards
+- today cost estimate badge
+- replay / export JSONL
 
-## Longer-term goals
+## Non-goals for MVP
 
-- timeline lanes by profile
-- handoff graph
-- cost estimates
-- historical analytics
+- exact billing accuracy across all providers
+- cross-machine fleet observability
+- long-term warehousing
+- full dashboard analytics suite
